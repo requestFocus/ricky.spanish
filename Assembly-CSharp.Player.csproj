@@ -47,7 +47,10 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.3.9f1/Unity.app/Contents/Resources/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/_Project/Scripts/Data/Flashcard.cs" />
+    <Compile Include="Assets/_Project/Scripts/TestBootstrapper.cs" />
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
+    <Compile Include="Assets/_Project/Scripts/Networking/NetworkService.cs" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.3.9f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/Variations/mono/Managed/UnityEngine.dll</HintPath>
     </Reference>
@@ -296,6 +299,9 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>/Users/maciejniescioruk/ricky.spanish/Library/PackageCache/com.unity.visualscripting@191c0d7e3b69/Runtime/VisualScripting.Flow/Dependencies/NCalc/Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>/Users/maciejniescioruk/ricky.spanish/Library/PackageCache/com.unity.nuget.newtonsoft-json@4dfd81071c64/Runtime/AOT/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>/Users/maciejniescioruk/ricky.spanish/Library/PackageCache/com.unity.collections@aea9d3bd5e19/Unity.Collections.Tests/System.Runtime.CompilerServices.Unsafe/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -712,6 +718,14 @@
       <Project>{dbf26cb7-a68d-d104-45e1-2e50b15636e0}</Project>
       <Name>Unity.VisualScripting.Flow.Player</Name>
     </ProjectReference>
+    <ProjectReference Include="UniTask.TextMeshPro.Player.csproj">
+      <Project>{5ccef556-5b8e-0d8c-c5f3-c6e325a50d09}</Project>
+      <Name>UniTask.TextMeshPro.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="UniTask.DOTween.Player.csproj">
+      <Project>{fb847333-3b5f-57b0-3a48-143035a1ae25}</Project>
+      <Name>UniTask.DOTween.Player</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Collections.Player.csproj">
       <Project>{127bbb03-bd45-e0dd-c2dd-811ad7cd9d98}</Project>
       <Name>Unity.Collections.Player</Name>
@@ -760,13 +774,25 @@
       <Project>{93372ffe-032b-4bb2-16c1-6b28ac4aaa65}</Project>
       <Name>Unity.RenderPipelines.Universal.Config.Runtime.Player</Name>
     </ProjectReference>
+    <ProjectReference Include="UniTask.Linq.Player.csproj">
+      <Project>{593d2d5b-39b6-fcfb-b24a-7cb152683dc5}</Project>
+      <Name>UniTask.Linq.Player</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.RenderPipeline.Universal.ShaderLibrary.Player.csproj">
       <Project>{62cfa486-8c61-44b2-9121-6126ad35a424}</Project>
       <Name>Unity.RenderPipeline.Universal.ShaderLibrary.Player</Name>
     </ProjectReference>
+    <ProjectReference Include="UniTask.Addressables.Player.csproj">
+      <Project>{f8203168-06b7-7f79-9a00-1f1dda2d92aa}</Project>
+      <Name>UniTask.Addressables.Player</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.InputSystem.Player.csproj">
       <Project>{f361a573-79d1-20e4-8ec9-c03141e86098}</Project>
       <Name>Unity.InputSystem.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="UniTask.Player.csproj">
+      <Project>{63efc228-0f66-14dd-c82b-ded5bcbdbe72}</Project>
+      <Name>UniTask.Player</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
