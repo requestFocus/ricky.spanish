@@ -1,0 +1,21 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/stylesheet-1.uss?fileID=7433441132597879392&amp;guid=5d59ac3919aaf436898e279269816050&amp;type=3#stylesheet-1"/>
+    <ui:VisualElement name="Screen" style="flex-grow: 1; width: 100%; height: 100%; align-items: center; justify-content: center; align-content: center; background-color: rgb(214, 155, 100); align-self: center;">
+        <ui:VisualElement name="card-container" style="flex-grow: 0; width: 80%; height: 40%; justify-content: center; background-color: rgba(0, 0, 0, 0.25); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; align-items: center; padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px; border-left-color: rgb(71, 116, 180); border-right-color: rgb(71, 116, 180); border-top-color: rgb(71, 116, 180); border-bottom-color: rgb(71, 116, 180); align-self: center; align-content: auto; flex-direction: column; flex-wrap: nowrap; -unity-text-align: middle-left;">
+            <ui:Label text="WordPL" name="label-pl" style="font-size: 60%;"/>
+            <ui:Button text="Button" name="btn-reveal" style="width: 200px; font-size: 30px;"/>
+            <ui:Label text="WordES" name="label-es" style="font-size: 60px; transition-property: all; transition-duration: 0s; transition-timing-function: ease;"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:Button text="X" name="btn-delete" enable-rich-text="true" style="position: absolute; right: 0; align-items: flex-end; justify-content: flex-start; align-self: flex-end; color: rgb(118, 24, 24); height: 35px; width: 35px; left: auto; -unity-font-style: bold;"/>
+    <ui:Button text="+" name="btn-add" enable-rich-text="true" style="position: absolute; right: 0; align-items: flex-end; justify-content: flex-start; align-self: flex-end; color: rgb(118, 24, 24); height: 35px; width: 35px; left: 0; -unity-font-style: bold;"/>
+    <ui:VisualElement name="errors-container" style="flex-grow: 1; position: absolute; bottom: 3%; left: 0; right: 0; flex-direction: column; height: 148px; justify-content: center; align-items: center; align-content: auto; -unity-text-align: upper-left; flex-wrap: nowrap;">
+        <ui:Button text="Retry" name="btn-retry" style="font-size: 30px; opacity: 1; top: auto; align-items: center;"/>
+        <ui:Label text="Error" name="error-message" style="font-size: 30px; color: rgb(255, 0, 0); opacity: 1; position: relative; top: auto; left: auto; right: auto; width: 100%; align-items: auto; align-self: auto; align-content: auto; -unity-text-align: upper-center;"/>
+    </ui:VisualElement>
+    <ui:VisualElement name="add-card-screen" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgb(78, 140, 82); display: none; align-items: center; justify-content: center; top: 0; left: 0;">
+        <ui:TextField label="INPUT PL" placeholder-text="filler text" name="input-pl" style="width: 90%; font-size: 60px;"/>
+        <ui:TextField label="INPUT ES" placeholder-text="filler text" name="input-es" style="width: 90%; font-size: 60px;"/>
+        <ui:Button text="Save" name="btn-save" style="width: 30%; height: 10%; font-size: 70px;"/>
+    </ui:VisualElement>
+</ui:UXML>

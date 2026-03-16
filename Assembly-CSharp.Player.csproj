@@ -48,7 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Data/Flashcard.cs" />
-    <Compile Include="Assets/_Project/Scripts/TestBootstrapper.cs" />
+    <Compile Include="Assets/_Project/Scripts/AppBootstrapper.cs" />
+    <Compile Include="Assets/_Project/Scripts/FlashcardController.cs" />
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
     <Compile Include="Assets/_Project/Scripts/Networking/NetworkService.cs" />
     <Reference Include="UnityEngine">

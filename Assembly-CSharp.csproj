@@ -48,7 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/_Project/Scripts/Data/Flashcard.cs" />
-    <Compile Include="Assets/_Project/Scripts/TestBootstrapper.cs" />
+    <Compile Include="Assets/_Project/Scripts/AppBootstrapper.cs" />
+    <Compile Include="Assets/_Project/Scripts/FlashcardController.cs" />
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
     <Compile Include="Assets/_Project/Scripts/Networking/NetworkService.cs" />
     <None Include="Library/PackageCache/com.unity.ai.navigation@c33a115e9883/ValidationExceptions.json" />
@@ -129,6 +130,7 @@
     <None Include="Library/PackageCache/com.unity.ugui@bb329a87fcdc/Editor Resources/Shaders/TMP_SDF Internal Editor.shader" />
     <None Include="Library/PackageCache/com.unity.modules.director/package.json" />
     <None Include="Library/PackageCache/com.unity.visualscripting@191c0d7e3b69/ValidationConfig.json" />
+    <None Include="Assets/stylesheet-1.uss" />
     <None Include="Library/PackageCache/com.unity.modules.terrain/package.json" />
     <None Include="Library/PackageCache/com.unity.collections@aea9d3bd5e19/package.json" />
     <None Include="Library/PackageCache/com.unity.modules.androidjni/package.json" />
