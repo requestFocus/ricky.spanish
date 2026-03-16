@@ -1,9 +1,26 @@
+# --- Unity ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Ll]ogs/
+MemoryCaptures/
+UserSettings/
+.plastic/
+
+# --- IDE ---
+.idea/
+.vs/
+*.csproj
+*.sln
+*.unitypackage
+*.userprefs
+
+# --- Logs/DB ---
+*.log
+**/Logs/
+db.json
+
+# --- System ---
 .DS_Store
-**/.DS_Store
-/[Ll]ibrary/
-/[Tt]emp/
-/[Obj]/
-/[Build]/
-/[Logs]/
-/[MemoryCaptures]/
-/UserSettings/
+Thumbs.db
