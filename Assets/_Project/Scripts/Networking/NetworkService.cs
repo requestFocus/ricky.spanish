@@ -88,6 +88,7 @@ public class NetworkService
             await request.SendWebRequest();
             
             Debug.Log($"{request.downloadHandler.text}");
+            
             return request.result == UnityWebRequest.Result.Success;
         }
         catch (OperationCanceledException)
