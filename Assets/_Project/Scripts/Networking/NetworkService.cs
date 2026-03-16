@@ -33,12 +33,12 @@ public class NetworkService
         }
         catch (Exception e)
         {
-            Debug.LogError($"[NetworkService] Exception: {e.Message}");
+            Debug.LogError($"[NetworkService] Exception during GET: {e.Message}");
             return null;
         }
     }
     
-    public async UniTask<bool> DeleteCardAsync(int id)
+    public async UniTask<bool> DeleteCardAsync(string id)
     {
         var requestUrl = $"{Url}/{id}";
         try
@@ -61,7 +61,7 @@ public class NetworkService
         }
         catch (Exception e)
         {
-            Debug.LogError($"[NetworkService] Exception: {e.Message}");
+            Debug.LogError($"[NetworkService] Exception during DELETE: {e.Message}");
             return false;
         }
     }
@@ -70,25 +70,16 @@ public class NetworkService
     {
         try
         {
-            string json = JsonConvert.SerializeObject(flashcard, new JsonSerializerSettings 
-            { 
-                StringEscapeHandling = StringEscapeHandling.Default 
-            });
-            Debug.Log($"[NetworkService] Sending: {json}");
+            string json = JsonConvert.SerializeObject(flashcard); 
 
             using var request = new UnityWebRequest(Url, "POST");
-
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
 
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
-
             request.SetRequestHeader("Content-Type", "application/json");
 
             await request.SendWebRequest();
-            
-            Debug.Log($"{request.downloadHandler.text}");
-            
             return request.result == UnityWebRequest.Result.Success;
         }
         catch (OperationCanceledException)
@@ -97,7 +88,35 @@ public class NetworkService
         }
         catch (Exception e)
         {
-            Debug.LogError($"[NetworkService] Exception: {e.Message}");
+            Debug.LogError($"[NetworkService] Exception during POST: {e.Message}");
+            return false;
+        }
+    }
+
+    public async UniTask<bool> UpdateCardAsync(Flashcard flashcard)
+    {
+        try
+        {
+            string json = JsonConvert.SerializeObject(flashcard); 
+            
+            string requestUrl = $"{Url}/{flashcard.Id}";
+            using var request = new UnityWebRequest(requestUrl, "PUT");
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            await request.SendWebRequest();
+            return request.result == UnityWebRequest.Result.Success;
+        }
+        catch (OperationCanceledException)
+        {
+            return false;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[NetworkService] Exception during PUT: {e.Message}");
             return false;
         }
     }

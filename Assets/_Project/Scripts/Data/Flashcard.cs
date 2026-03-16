@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 public class Flashcard
 {
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-    public int Id { get; set; }
+    public string Id { get; set; }
     
     [JsonProperty("pl")]
     public string Polish { get; set; }

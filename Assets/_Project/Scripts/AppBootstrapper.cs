@@ -14,6 +14,7 @@ public class AppBootstrapper: MonoBehaviour
         _flashcardController.OnRetryRequested += HandleRetry;
         _flashcardController.OnDeleteRequested += HandleDelete;
         _flashcardController.OnAddRequested += HandleAdd;
+        _flashcardController.OnUpdateRequested += HandleUpdate;
     }
 
     private void OnDisable()
@@ -21,6 +22,7 @@ public class AppBootstrapper: MonoBehaviour
         _flashcardController.OnRetryRequested -= HandleRetry;
         _flashcardController.OnDeleteRequested -= HandleDelete;
         _flashcardController.OnAddRequested -= HandleAdd;
+        _flashcardController.OnUpdateRequested -= HandleUpdate;
     }
 
     private void HandleRetry()
@@ -28,12 +30,12 @@ public class AppBootstrapper: MonoBehaviour
         StartAsync().Forget();
     }
     
-    private void HandleDelete(int id)
+    private void HandleDelete(string id)
     {
         DeleteCardAsync(id).Forget();
     }
 
-    private async UniTaskVoid DeleteCardAsync(int id)
+    private async UniTaskVoid DeleteCardAsync(string id)
     {
         bool success = await _networkService.DeleteCardAsync(id);
         
@@ -52,9 +54,37 @@ public class AppBootstrapper: MonoBehaviour
         AddCardAsync(flashcard).Forget();
     }
 
+    private void HandleUpdate(Flashcard flashcard)
+    {
+        UpdateCardAsync(flashcard).Forget();
+    }
+
     private async UniTaskVoid AddCardAsync(Flashcard flashcard)
     {
         bool success = await _networkService.AddCardAsync(flashcard);
+        
+        if (success)
+        {
+            StartAsync().Forget();
+        }
+        else
+        {
+            _flashcardController.ShowError("Failed to add card");
+        }
+    }
+    
+    private async UniTaskVoid UpdateCardAsync(Flashcard flashcard)
+    {
+        bool success = await _networkService.UpdateCardAsync(flashcard);
+        
+        if (success)
+        {
+            StartAsync().Forget();
+        }
+        else
+        {
+            _flashcardController.ShowError("Failed to update card");
+        }
     }
 
     public void Start()

@@ -6,26 +6,53 @@ using UnityEngine.UIElements;
 public class FlashcardController : MonoBehaviour
 {
     public event Action OnRetryRequested;
-    public event Action<int> OnDeleteRequested;
+    public event Action<string> OnDeleteRequested;
     public event Action<Flashcard> OnAddRequested;
-    
+    public event Action<Flashcard> OnUpdateRequested;
+
     private Label _polishLabel;
-    private TextField _polishInput;
     private Label _spanishLabel;
-    private TextField _spanishInput;
     private Label _errorLabel;
+    private TextField _polishInput;
+    private TextField _spanishInput;
     private Button _reconnectButton;
     private Button _revealButton;
     private Button _addButton;
     private Button _deleteButton;
-    private Button _saveButton;
-    private VisualElement _errorsContainer;
-    private VisualElement _addCardScreen;
+    private Button _saveUpdateButton;
+    private Button _cancelCardChangeButton;
+    private Button _editButton;
     
+    private VisualElement _errorsContainer;
+    private VisualElement _addUpdateCardScreen;
+
     private List<Flashcard> _allCards;
     private int _currentIndex;
+    private string _currentEditedId;
 
     private VisualElement _root => GetComponent<UIDocument>().rootVisualElement;
+
+    private void OnEnable()
+    {
+        if (_revealButton != null) _revealButton.clicked += OnRevealButtonClicked;
+        if (_deleteButton != null) _deleteButton.clicked += OnDeleteButtonClicked;
+        if (_addButton != null) _addButton.clicked += OnAddCardButtonClicked;
+        if (_saveUpdateButton != null) _saveUpdateButton.clicked += OnSaveButtonClicked;
+        if (_reconnectButton != null) _reconnectButton.clicked += OnRetryButtonClicked;
+        if (_editButton != null) _editButton.clicked += OnEditCardButtonClicked;
+        if (_cancelCardChangeButton != null) _cancelCardChangeButton.clicked += OnCancelCardChangeClicked;
+    }
+
+    private void OnDisable()
+    {
+        if (_revealButton != null) _revealButton.clicked -= OnRevealButtonClicked;
+        if (_deleteButton != null) _deleteButton.clicked -= OnDeleteButtonClicked;
+        if (_addButton != null) _addButton.clicked -= OnAddCardButtonClicked;
+        if (_saveUpdateButton != null) _saveUpdateButton.clicked -= OnSaveButtonClicked;
+        if (_reconnectButton != null) _reconnectButton.clicked -= OnRetryButtonClicked;
+        if (_editButton != null) _editButton.clicked -= OnEditCardButtonClicked;
+        if (_cancelCardChangeButton != null) _cancelCardChangeButton.clicked -= OnCancelCardChangeClicked;
+    }
 
     private void Awake()
     {
@@ -33,10 +60,12 @@ public class FlashcardController : MonoBehaviour
         _spanishLabel = _root.Q<Label>("label-es");
         _revealButton = _root.Q<Button>("btn-reveal");
         _addButton = _root.Q<Button>("btn-add");
-        _saveButton = _root.Q<Button>("btn-save");
+        _editButton = _root.Q<Button>("btn-update");
+        _saveUpdateButton = _root.Q<Button>("btn-save");
+        _cancelCardChangeButton = _root.Q<Button>("btn-cancel");
         _polishInput = _root.Q<TextField>("input-pl");
         _spanishInput = _root.Q<TextField>("input-es");
-        _addCardScreen = _root.Q<VisualElement>("add-card-screen");
+        _addUpdateCardScreen = _root.Q<VisualElement>("add-update-card-screen");
         _deleteButton = _root.Q<Button>("btn-delete");
         _errorLabel = _root.Q<Label>("error-message");
         _reconnectButton = _root.Q<Button>("btn-retry");
@@ -50,15 +79,6 @@ public class FlashcardController : MonoBehaviour
 
         _errorsContainer.style.opacity = 0;
         _errorsContainer.style.display = DisplayStyle.Flex;
-        _revealButton.clicked += OnRevealButtonClicked;
-        _deleteButton.clicked += OnDeleteButtonClicked;
-        _addButton.clicked += OnAddCardButtonClicked;
-        _saveButton.clicked += OnAddButtonClicked;
-
-    _reconnectButton.clicked += () =>
-        {
-            OnRetryRequested?.Invoke();
-        };
     }
 
     private void OnRevealButtonClicked()
@@ -76,29 +96,65 @@ public class FlashcardController : MonoBehaviour
 
     private void OnDeleteButtonClicked()
     {
-        int idToDelete = _allCards[_currentIndex].Id;
+        string idToDelete = _allCards[_currentIndex].Id;
         OnDeleteRequested?.Invoke(idToDelete);
     }
 
     private void OnAddCardButtonClicked()
     {
-        _addCardScreen.style.display = DisplayStyle.Flex;
+        _currentEditedId = null;
+        
+        _polishInput.value = "";
+        _spanishInput.value = "";
+        _addUpdateCardScreen.style.backgroundColor = Color.limeGreen;
+        _addUpdateCardScreen.style.display = DisplayStyle.Flex;
+    }
+
+    private void OnEditCardButtonClicked()
+    {
+        Flashcard currentCard = _allCards[_currentIndex];
+        _currentEditedId = currentCard.Id;
+        
+        _polishInput.value = currentCard.Polish;
+        _spanishInput.value = currentCard.Spanish;
+        
+        _saveUpdateButton.text = "Update";
+        _addUpdateCardScreen.style.backgroundColor = Color.deepSkyBlue;
+        _addUpdateCardScreen.style.display = DisplayStyle.Flex;
     }
     
-    private void OnAddButtonClicked()
+    private void OnCancelCardChangeClicked()
+    {
+        _addUpdateCardScreen.style.display = DisplayStyle.None;
+    }
+
+    private void OnRetryButtonClicked()
+    {
+        OnRetryRequested?.Invoke();
+    }
+    
+    private void OnSaveButtonClicked()
     {
         string polish = _polishInput.text;
         string spanish = _spanishInput.text;
 
-        var newFlashcard = new Flashcard
+        var flashcard = new Flashcard 
         {
             Polish = polish,
             Spanish = spanish,
         };
         
-        OnAddRequested?.Invoke(newFlashcard);
-        
-        _addCardScreen.style.display = DisplayStyle.None;
+        if (_currentEditedId != null)
+        {
+            flashcard.Id = _currentEditedId;
+            OnUpdateRequested?.Invoke(flashcard);
+        }
+        else
+        {
+            OnAddRequested?.Invoke(flashcard);
+        }
+
+        _addUpdateCardScreen.style.display = DisplayStyle.None;
     }
 
     private void ShowNextCard()
