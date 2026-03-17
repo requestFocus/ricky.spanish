@@ -29,7 +29,7 @@ public class NetworkService
         }
         catch (OperationCanceledException)
         {
-            return null;
+            throw;
         }
         catch (Exception e)
         {
@@ -38,7 +38,7 @@ public class NetworkService
         }
     }
     
-    public async UniTask<bool> DeleteCardAsync(string id)
+    public async UniTask DeleteCardAsync(string id)
     {
         var requestUrl = $"{Url}/{id}";
         try
@@ -50,23 +50,20 @@ public class NetworkService
             if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"[NetworkService] Could not delete {id}: {request.error}");
-                return false;
             }
-
-            return true;
         }
         catch (OperationCanceledException)
         {
-            return false;
+            throw;
         }
         catch (Exception e)
         {
             Debug.LogError($"[NetworkService] Exception during DELETE: {e.Message}");
-            return false;
+            throw;
         }
     }
 
-    public async UniTask<bool> AddCardAsync(Flashcard flashcard)
+    public async UniTask AddCardAsync(Flashcard flashcard)
     {
         try
         {
@@ -80,20 +77,23 @@ public class NetworkService
             request.SetRequestHeader("Content-Type", "application/json");
 
             await request.SendWebRequest();
-            return request.result == UnityWebRequest.Result.Success;
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"[NetworkService] Could not add card: {request.error}");
+            }
         }
         catch (OperationCanceledException)
         {
-            return false;
+            throw;
         }
         catch (Exception e)
         {
             Debug.LogError($"[NetworkService] Exception during POST: {e.Message}");
-            return false;
+            throw;
         }
     }
 
-    public async UniTask<bool> UpdateCardAsync(Flashcard flashcard)
+    public async UniTask UpdateCardAsync(Flashcard flashcard)
     {
         try
         {
@@ -108,16 +108,19 @@ public class NetworkService
             request.SetRequestHeader("Content-Type", "application/json");
 
             await request.SendWebRequest();
-            return request.result == UnityWebRequest.Result.Success;
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"[NetworkService] Could not update card: {request.error}");
+            }
         }
         catch (OperationCanceledException)
         {
-            return false;
+            throw;
         }
         catch (Exception e)
         {
             Debug.LogError($"[NetworkService] Exception during PUT: {e.Message}");
-            return false;
+            throw;
         }
     }
 }
