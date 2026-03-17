@@ -20,4 +20,7 @@
         <ui:Button text="Save" name="btn-save" style="width: 30%; height: 10%; font-size: 70px;"/>
         <ui:Button text="x" name="btn-cancel" style="position: absolute; right: 0; top: 0;"/>
     </ui:VisualElement>
+    <ui:VisualElement name="spinner-overlay" style="flex-grow: 1; position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.57); justify-content: center; color: rgb(255, 27, 27); visibility: hidden; display: flex; overflow: visible;">
+        <ui:Label text="Loading..." name="lbl-loading" style="height: 100px; align-self: auto; align-content: auto; font-size: 80px; -unity-text-align: middle-center;"/>
+    </ui:VisualElement>
 </ui:UXML>

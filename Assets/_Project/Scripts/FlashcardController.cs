@@ -25,6 +25,7 @@ public class FlashcardController : MonoBehaviour
     
     private VisualElement _errorsContainer;
     private VisualElement _addUpdateCardScreen;
+    private VisualElement _spinnerOverlay;
 
     private List<Flashcard> _allCards;
     private int _currentIndex;
@@ -70,6 +71,7 @@ public class FlashcardController : MonoBehaviour
         _errorLabel = _root.Q<Label>("error-message");
         _reconnectButton = _root.Q<Button>("btn-retry");
         _errorsContainer = _root.Q<VisualElement>("errors-container");
+        _spinnerOverlay = _root.Q<VisualElement>("spinner-overlay");
 
         if (_spanishLabel != null)
         {
@@ -155,6 +157,11 @@ public class FlashcardController : MonoBehaviour
         }
 
         _addUpdateCardScreen.style.display = DisplayStyle.None;
+    }
+
+    public void ToggleSpinner(bool show)
+    {
+        _spinnerOverlay.style.visibility = show ? Visibility.Visible : Visibility.Hidden;
     }
 
     private void ShowNextCard()

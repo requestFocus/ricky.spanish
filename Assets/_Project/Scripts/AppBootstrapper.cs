@@ -37,7 +37,9 @@ public class AppBootstrapper: MonoBehaviour
 
     private async UniTaskVoid DeleteCardAsync(string id)
     {
+        _flashcardController.ToggleSpinner(true);
         bool success = await _networkService.DeleteCardAsync(id);
+        _flashcardController.ToggleSpinner(false);
         
         if (success)
         {
@@ -61,7 +63,9 @@ public class AppBootstrapper: MonoBehaviour
 
     private async UniTaskVoid AddCardAsync(Flashcard flashcard)
     {
+        _flashcardController.ToggleSpinner(true);
         bool success = await _networkService.AddCardAsync(flashcard);
+        _flashcardController.ToggleSpinner(false);
         
         if (success)
         {
@@ -75,7 +79,9 @@ public class AppBootstrapper: MonoBehaviour
     
     private async UniTaskVoid UpdateCardAsync(Flashcard flashcard)
     {
+        _flashcardController.ToggleSpinner(true);
         bool success = await _networkService.UpdateCardAsync(flashcard);
+        _flashcardController.ToggleSpinner(false);
         
         if (success)
         {
@@ -96,7 +102,10 @@ public class AppBootstrapper: MonoBehaviour
     {
         _flashcardController.HideError();
 
+        _flashcardController.ToggleSpinner(true);
         List<Flashcard> cards = await FetchCardsAsync();
+        _flashcardController.ToggleSpinner(false);
+        
         if (cards == null)
         {
             _flashcardController.ShowError("Failed to fetch cards");
