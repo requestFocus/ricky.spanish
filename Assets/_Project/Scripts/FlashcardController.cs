@@ -225,8 +225,6 @@ public class FlashcardController : MonoBehaviour
         ToggleSpinner(true);
         try
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(3));
-            throw new Exception("blabla");
             _allCards = await _networkService.FetchCardsAsync();
         }
         catch (OperationCanceledException)
