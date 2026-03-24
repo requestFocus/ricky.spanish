@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI/ricky.spanish.styles.uss?fileID=7433441132597879392&amp;guid=c98255c9bff0e4612b5a9b751a13e2e6&amp;type=3#ricky.spanish.styles"/>
+    <ui:VisualElement name="menu-container" class="flashcard-container-2">
+        <ui:Label text="ricky spanish" name="lbl-app-title" style="width: 100%; height: 50%; align-self: auto; align-items: center; -unity-text-align: upper-center; font-size: 200px; white-space: normal;"/>
+        <ui:VisualElement name="btn-container" style="flex-grow: 1; flex-direction: row; width: 100%; height: 50%; justify-content: center; align-items: center;">
+            <ui:Button text="PL-&gt;ES" name="btn-polish-to-spanish" class="menu-button"/>
+            <ui:Button text="ES-&gt;PL" name="btn-spanish-to-polish" class="menu-button"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

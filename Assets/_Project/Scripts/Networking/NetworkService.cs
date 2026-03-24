@@ -123,5 +123,75 @@ public class NetworkService
             throw;
         }
     }
+
+    public async UniTask MarkAsFavouriteAsync(string id, bool state)
+    {
+        try
+        {
+            string requestUrl = $"{Url}/{id}";
+            
+            using var request = new UnityWebRequest(requestUrl, "PATCH");
+            var patchData = new Dictionary<string, bool>
+            {
+                { "IsFavourite", state }
+            };
+            string json = JsonConvert.SerializeObject(patchData);
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            await request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"[NetworkService] Could not patch card: {request.error}");
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[NetworkService] Exception during PATCH: {e.Message}");
+            throw;
+        }
+    }
+
+    public async UniTask SaveNoteAsync(string id, string note)
+    {
+        try
+        {
+            string requestUrl = $"{Url}/{id}";
+            
+            using var request = new UnityWebRequest(requestUrl, "PATCH");
+            var patchData = new Dictionary<string, string>
+            {
+                { "Note", note }
+            };
+            string json = JsonConvert.SerializeObject(patchData);
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            await request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"[NetworkService] Could not patch card: {request.error}");
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[NetworkService] Exception during PATCH: {e.Message}");
+            throw;
+        }
+    }
 }
 

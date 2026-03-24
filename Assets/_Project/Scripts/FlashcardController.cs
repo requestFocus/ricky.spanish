@@ -6,34 +6,54 @@ using UnityEngine.UIElements;
 
 public class FlashcardController : MonoBehaviour
 {
+    public event Action OnBackRequested;
+    
     private VisualElement _root => GetComponent<UIDocument>().rootVisualElement;
-    private Label _polishLabel;
-    private Label _spanishLabel;
+    
+    private Label _topLabel;
+    private Label _bottomLabel;
     private Label _errorLabel;
     private TextField _polishInput;
     private TextField _spanishInput;
     private Button _reconnectButton;
     private Button _revealButton;
-    private Button _addButton;
+    private Button _addFlashcardButton;
     private Button _deleteButton;
     private Button _saveUpdateButton;
     private Button _cancelCardChangeButton;
     private Button _editButton;
+    private Button _favouriteButton;
+    private Button _addNoteButton;
+    private Button _backCardButton;
+    private Button _backNoteButton;
+    private Button _saveNoteButton;
     
     private VisualElement _errorsContainer;
     private VisualElement _addUpdateCardScreen;
     private VisualElement _spinnerOverlay;
+    private VisualElement _cardScreen;
+    private VisualElement _noteScreen;
+    private TextField _noteTextfield;
 
     private List<Flashcard> _allCards;
-    private int _currentIndex;
+    private int _currentDrawnCardIndex;
+    private string _originalNote;
     private string _currentEditedId;
+    private GameModes _gameMode;
 
     private NetworkService _networkService;
+    private IAssetService _assetService;
+    
+    private Sprite _favouriteSprite;
 
-    public void Initialize(NetworkService networkService)
+    public void Initialize(
+        NetworkService networkService,
+        IAssetService assetService,
+        GameModes gameMode)
     {
         _networkService = networkService;
-        _currentIndex = 0; // randomize it
+        _assetService = assetService;
+        _gameMode = gameMode;
 
         AssignUiElements();
         EnableButtons();
@@ -43,11 +63,15 @@ public class FlashcardController : MonoBehaviour
 
     private void AssignUiElements()
     {
-        _polishLabel = _root.Q<Label>("label-pl");
-        _spanishLabel = _root.Q<Label>("label-es");
+        _topLabel = _root.Q<Label>("label-pl");
+        _bottomLabel = _root.Q<Label>("label-es");
         _revealButton = _root.Q<Button>("btn-reveal");
-        _addButton = _root.Q<Button>("btn-add");
+        _addFlashcardButton = _root.Q<Button>("btn-add-flashcard");
+        _addNoteButton = _root.Q<Button>("btn-add-note");
         _editButton = _root.Q<Button>("btn-update");
+        _backCardButton = _root.Q<Button>("btn-card-back");
+        _backNoteButton = _root.Q<Button>("btn-note-back");
+        _favouriteButton = _root.Q<Button>("btn-favourite");
         _saveUpdateButton = _root.Q<Button>("btn-save");
         _cancelCardChangeButton = _root.Q<Button>("btn-cancel");
         _polishInput = _root.Q<TextField>("input-pl");
@@ -58,65 +82,143 @@ public class FlashcardController : MonoBehaviour
         _reconnectButton = _root.Q<Button>("btn-retry");
         _errorsContainer = _root.Q<VisualElement>("errors-container");
         _spinnerOverlay = _root.Q<VisualElement>("spinner-overlay");
+        _cardScreen = _root.Q<VisualElement>("card-screen");
+        _noteScreen = _root.Q<VisualElement>("note-screen");
+        _noteTextfield = _root.Q<TextField>("note-textfield");
+        _saveNoteButton = _root.Q<Button>("btn-save-note");
         
-        if (_spanishLabel != null)
+        if (_bottomLabel != null)
         {
-            _spanishLabel.style.opacity = 0;
-            _spanishLabel.style.display = DisplayStyle.Flex;
+            _bottomLabel.style.opacity = 0;
+            _bottomLabel.style.display = DisplayStyle.Flex;
         }
 
         _errorsContainer.style.opacity = 0;
         _errorsContainer.style.display = DisplayStyle.Flex;
+
+        _cardScreen.style.display = DisplayStyle.Flex;
+        _noteScreen.style.display = DisplayStyle.None;
     }
 
     private async UniTaskVoid InitializeAsync()
     {
-        await FetchCardsAsync();
-        DisplayCurrentCard();
+        _favouriteSprite = await _assetService.LoadSprite("Icon/FavouriteIcon");
+
+        if (_favouriteButton != null && _favouriteSprite != null)
+        {
+            _favouriteButton.style.backgroundImage = new StyleBackground(_favouriteSprite);
+        }
+        
+        _allCards = await FetchCardsAsync();
+        DisplayRandomCard(_allCards);
     }
     
     private void EnableButtons()
     {
         if (_revealButton != null) _revealButton.clicked += OnRevealButtonClicked;
         if (_deleteButton != null) _deleteButton.clicked += OnDeleteButtonClicked;
-        if (_addButton != null) _addButton.clicked += OnAddCardButtonClicked;
-        if (_saveUpdateButton != null) _saveUpdateButton.clicked += OnSaveButtonClicked;
+        if (_addFlashcardButton != null) _addFlashcardButton.clicked += OnAddFlashcardCardButtonClicked;
+        if (_saveUpdateButton != null) _saveUpdateButton.clicked += OnSaveFlashcardButtonClicked;
         if (_reconnectButton != null) _reconnectButton.clicked += OnRetryButtonClicked;
         if (_editButton != null) _editButton.clicked += OnEditCardButtonClicked;
         if (_cancelCardChangeButton != null) _cancelCardChangeButton.clicked += OnCancelCardChangeClicked;
+        if (_favouriteButton != null) _favouriteButton.clicked += OnFavouriteButtonClicked;
+        if (_backCardButton != null) _backCardButton.clicked += OnBackCardButtonClicked;
+        if (_backNoteButton != null) _backNoteButton.clicked += OnBackNoteButtonClicked; 
+        if (_addNoteButton != null) _addNoteButton.clicked += OnAddNoteButtonClicked;
+        if (_saveNoteButton != null) _saveNoteButton.clicked += OnSaveNoteButtonClicked;
     }
 
     private void OnDisable()
     {
         if (_revealButton != null) _revealButton.clicked -= OnRevealButtonClicked;
         if (_deleteButton != null) _deleteButton.clicked -= OnDeleteButtonClicked;
-        if (_addButton != null) _addButton.clicked -= OnAddCardButtonClicked;
-        if (_saveUpdateButton != null) _saveUpdateButton.clicked -= OnSaveButtonClicked;
+        if (_addFlashcardButton != null) _addFlashcardButton.clicked -= OnAddFlashcardCardButtonClicked;
+        if (_saveUpdateButton != null) _saveUpdateButton.clicked -= OnSaveFlashcardButtonClicked;
         if (_reconnectButton != null) _reconnectButton.clicked -= OnRetryButtonClicked;
         if (_editButton != null) _editButton.clicked -= OnEditCardButtonClicked;
         if (_cancelCardChangeButton != null) _cancelCardChangeButton.clicked -= OnCancelCardChangeClicked;
+        if (_favouriteButton != null) _favouriteButton.clicked -= OnFavouriteButtonClicked;
+        if (_backCardButton != null) _backCardButton.clicked -= OnBackCardButtonClicked;
+        if (_backNoteButton != null) _backNoteButton.clicked -= OnBackNoteButtonClicked;
+        if (_addNoteButton != null) _addNoteButton.clicked -= OnAddNoteButtonClicked;
+        if (_saveNoteButton != null) _saveNoteButton.clicked += OnSaveNoteButtonClicked;
+        
+        if (_favouriteSprite != null) _assetService.ReleaseAsset(_favouriteSprite);
     }
 
     private void OnRevealButtonClicked()
     {
-        if (_spanishLabel.style.opacity == 0)
+        if (_bottomLabel.style.opacity == 0)
         {
-            _spanishLabel.style.opacity = 1;
+            _bottomLabel.style.opacity = 1;
             _revealButton.text = "Hide";
         }
         else
         {
-            ShowNextCard();
+            DisplayRandomCard(_allCards);
         }
+    }
+    
+    private void OnFavouriteButtonClicked()
+    {
+        string idToMark = _allCards[_currentDrawnCardIndex].Id;
+        bool currentState = _allCards[_currentDrawnCardIndex].IsFavourite;
+        MarkAsFavouriteAsync(idToMark, !currentState).Forget();
+    }
+
+    private void OnBackCardButtonClicked()
+    {
+        OnBackRequested?.Invoke();
+    }
+
+    private void OnBackNoteButtonClicked()
+    {
+        ToggleCardNoteScreens(true);
+    }
+
+    private void OnAddNoteButtonClicked()
+    {
+        ToggleCardNoteScreens(false);
+    }
+
+    private void ToggleCardNoteScreens(bool showCard) // zmien na enuma
+    {
+        _cardScreen.style.display = showCard ? DisplayStyle.Flex : DisplayStyle.None;
+        _noteScreen.style.display = showCard ? DisplayStyle.None : DisplayStyle.Flex;
+
+        if (!showCard)
+        {
+            _saveNoteButton.style.opacity = 0;
+            _noteTextfield.RegisterValueChangedCallback(n => CheckIfNoteChanged(n.newValue));
+            
+            _noteTextfield.value = _allCards[_currentDrawnCardIndex].Note;
+            _noteTextfield.Focus();
+            _noteTextfield.SelectNone(); 
+            _noteTextfield.cursorIndex = _noteTextfield.value?.Length ?? 0;
+        }
+    }
+
+    private void CheckIfNoteChanged(string newNote)
+    {
+        bool isChanged = _originalNote != newNote;
+        _saveNoteButton.style.opacity = isChanged ? 1 : 0;
+    }
+
+    private void OnSaveNoteButtonClicked()
+    {
+        string idToMark = _allCards[_currentDrawnCardIndex].Id;
+        string note = _noteTextfield.value;
+        SaveNoteAsync(idToMark, note).Forget();
     }
 
     private void OnDeleteButtonClicked()
     {
-        string idToDelete = _allCards[_currentIndex].Id;
+        string idToDelete = _allCards[_currentDrawnCardIndex].Id;
         DeleteCardAsync(idToDelete).Forget();
     }
 
-    private void OnAddCardButtonClicked()
+    private void OnAddFlashcardCardButtonClicked()
     {
         _currentEditedId = null;
         
@@ -128,7 +230,7 @@ public class FlashcardController : MonoBehaviour
 
     private void OnEditCardButtonClicked()
     {
-        Flashcard currentCard = _allCards[_currentIndex];
+        Flashcard currentCard = _allCards[_currentDrawnCardIndex];
         _currentEditedId = currentCard.Id;
         
         _polishInput.value = currentCard.Polish;
@@ -149,7 +251,7 @@ public class FlashcardController : MonoBehaviour
         FetchCardsAsync().Forget();
     }
     
-    private void OnSaveButtonClicked()
+    private void OnSaveFlashcardButtonClicked()
     {
         string polish = _polishInput.text;
         string spanish = _spanishInput.text;
@@ -178,32 +280,40 @@ public class FlashcardController : MonoBehaviour
         _spinnerOverlay.style.visibility = show ? Visibility.Visible : Visibility.Hidden;
     }
 
-    private void ShowNextCard()
+    private void DisplayRandomCard(List<Flashcard> cards)
     {
-        _currentIndex++;
-        if (_currentIndex >= _allCards.Count)
-        {
-            _currentIndex = 0;
-        }
-        DisplayCurrentCard();
-    }
-
-    private void DisplayCurrentCard()
-    {
-        if (_allCards == null)
+        if (cards == null) 
             return;
         
-        Flashcard card = _allCards[_currentIndex];
+        int randomIndex = UnityEngine.Random.Range(0, _allCards.Count);
+        while (randomIndex == _currentDrawnCardIndex)
+        {
+            randomIndex = UnityEngine.Random.Range(0, _allCards.Count);
+        }
+
+        _currentDrawnCardIndex = randomIndex;
+        Flashcard card = _allCards[randomIndex];
+        _originalNote = _allCards[_currentDrawnCardIndex].Note;
         SetupCard(card);
     }
 
     private void SetupCard(Flashcard flashcard)
     {
-        _polishLabel.text = flashcard.Polish;
-        _spanishLabel.text = flashcard.Spanish;
+        if (_gameMode == GameModes.PL_TO_ES)
+        {
+            _topLabel.text = flashcard.Polish;
+            _bottomLabel.text = flashcard.Spanish;
+        }
+        else
+        {
+            _topLabel.text = flashcard.Spanish;
+            _bottomLabel.text = flashcard.Polish;
+        }
 
-        _spanishLabel.style.opacity = 0;
+        _bottomLabel.style.opacity = 0;
         _revealButton.text = "Reveal";
+        
+        _favouriteButton.style.unityBackgroundImageTintColor = _allCards[_currentDrawnCardIndex].IsFavourite ? Color.red : Color.gray;
     }
 
     private void ShowError(string failedToFetchCards)
@@ -220,12 +330,13 @@ public class FlashcardController : MonoBehaviour
         _root.Q<VisualElement>("errors-container").style.opacity = 0;
     }
     
-    private async UniTask FetchCardsAsync()
+    private async UniTask<List<Flashcard>> FetchCardsAsync()
     {
+        var allCards = new List<Flashcard>();
         ToggleSpinner(true);
         try
         {
-            _allCards = await _networkService.FetchCardsAsync();
+            allCards = await _networkService.FetchCardsAsync();
         }
         catch (OperationCanceledException)
         {
@@ -240,10 +351,37 @@ public class FlashcardController : MonoBehaviour
             ToggleSpinner(false);
         }
 
-        if (_allCards != null)
+        if (allCards != null)
         {
             HideError();
         }
+
+        return allCards;
+    }
+
+    private async UniTaskVoid MarkAsFavouriteAsync(string id, bool state)
+    {
+        ToggleSpinner(true);
+        try
+        {
+            await _networkService.MarkAsFavouriteAsync(id, state);
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("Operation canceled");
+        }
+        catch (Exception)
+        {
+            ShowError("Failed to mark as favourite");
+        }
+        finally
+        {
+            ToggleSpinner(false);
+        }
+        
+        _allCards = await FetchCardsAsync();
+        Flashcard card = _allCards[_currentDrawnCardIndex];
+        SetupCard(card);
     }
     
     private async UniTaskVoid DeleteCardAsync(string id)
@@ -313,5 +451,29 @@ public class FlashcardController : MonoBehaviour
         }
 
         InitializeAsync().Forget();
+    }
+
+    private async UniTask SaveNoteAsync(string id, string note)
+    {
+        ToggleSpinner(true);
+        try
+        {
+            await _networkService.SaveNoteAsync(id, note);
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("Operation canceled");
+        }
+        catch (Exception)
+        {
+            ShowError("Failed to save note");
+        }
+        finally
+        {
+            ToggleSpinner(false);
+        }
+
+        _originalNote = _noteTextfield.value;
+        CheckIfNoteChanged(_noteTextfield.value);
     }
 }

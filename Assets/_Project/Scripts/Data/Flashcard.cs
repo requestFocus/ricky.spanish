@@ -13,5 +13,11 @@ public class Flashcard
     
     [JsonProperty("level")]
     public int Level { get; set; }
+    
+    [JsonProperty("IsFavourite")]
+    public bool IsFavourite { get; set; }
+    
+    [JsonProperty("Note")]
+    public string Note { get; set; }
 }
 

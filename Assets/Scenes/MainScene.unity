@@ -276,6 +276,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestBootstrapper
   _flashcardController: {fileID: 815540425}
+  _uiDocument: {fileID: 815540423}
+  _menuAsset: {fileID: 9197481963319205126, guid: 9f1a475c06cda4d10b77ae82aeb685d0, type: 3}
+  _flashcardAsset: {fileID: 9197481963319205126, guid: f1647c61f0b58475a84a44122d7a282a, type: 3}
 --- !u!4 &432746685
 Transform:
   m_ObjectHideFlags: 0
@@ -323,7 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: d25e1d86b5504424b8c5818305e83c8a, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: f1647c61f0b58475a84a44122d7a282a, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 9f1a475c06cda4d10b77ae82aeb685d0, type: 3}
   m_SortingOrder: 0
   m_Position: 0
   m_WorldSpaceSizeMode: 1
