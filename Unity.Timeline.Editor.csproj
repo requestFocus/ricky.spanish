@@ -195,9 +195,9 @@
     <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/treeview/Snapping/ISnappable.cs" />
     <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/Window/TimelineNavigator.cs" />
     <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/Actions/TrackActions.cs" />
-    <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/Window/TimelineWindow_TrackGui.cs" />
     <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/Tooltip.cs" />
     <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/Manipulators/Sequence/TrimClip.cs" />
+    <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/Window/TimelineWindow_TrackGui.cs" />
     <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/Actions/Menus/TimelineContextMenu.cs" />
     <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/DirectorNamedColor.cs" />
     <Compile Include="Library/PackageCache/com.unity.timeline@7f8b2fb101b6/Editor/treeview/ManipulationsTracks.cs" />

@@ -534,8 +534,8 @@
     <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Drawing/Views/IdentifierField.cs" />
     <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Data/Graphs/Matrix4ShaderProperty.cs" />
     <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Data/Nodes/Input/PBR/DielectricSpecularNode.cs" />
-    <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Data/Graphs/NormalMaterialSlot.cs" />
     <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Drawing/Views/ReorderableSlotListView.cs" />
+    <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Data/Graphs/NormalMaterialSlot.cs" />
     <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Generation/Descriptors/SubShaderDescriptor.cs" />
     <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Data/Nodes/Utility/DropdownNode.cs" />
     <Compile Include="Library/PackageCache/com.unity.shadergraph@f80b792d4861/Editor/Drawing/Inspector/PropertyDrawers/GraphDataPropertyDrawer.cs" />
